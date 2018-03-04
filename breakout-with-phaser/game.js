@@ -14,6 +14,7 @@ const preload = () => {
   game.stage.backgroundColor = "#eee";
 
   game.load.image("ball", "img/ball.png");
+  game.load.spritesheet("ball", "img/wobble.png", 20, 20);
   game.load.image("paddle", "img/paddle.png");
   game.load.image("brick", "img/brick.png");
 };
@@ -75,6 +76,7 @@ const create = () => {
   lifeLostText.visible = false;
 
   ball = game.add.sprite(game.world.width*0.5, game.world.height-25, "ball");
+  ball.animations.add("wobble", [0,1,0,2,0,1,0,2,0], 24);
   ball.anchor.set(0.5);
 
   game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -98,7 +100,11 @@ const create = () => {
 };
 
 const ballHitBrick = (ball, brick) => {
-  brick.kill();
+  var killTween = game.add.tween(brick.scale);
+  killTween.to({x: 0, y: 0}, 200, Phaser.Easing.Linear.None);
+  killTween.onComplete.addOnce(brick.kill);
+  killTween.start();
+
   score += 10;
   scoreText.setText("Points: " + score);
 
@@ -115,7 +121,7 @@ const ballHitBrick = (ball, brick) => {
 };
 
 const update = () => {
-  game.physics.arcade.collide(ball, paddle);
+  game.physics.arcade.collide(ball, paddle, (ball, paddle) => ball.animations.play("wobble"));
   game.physics.arcade.collide(ball, bricks, ballHitBrick);
   paddle.x = game.input.x || game.world.width*0.5;
 };

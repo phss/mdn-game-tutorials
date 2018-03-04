@@ -158,8 +158,9 @@ const update = () => {
 const gameLoop = () => {
   draw();
   update();
+  requestAnimationFrame(gameLoop);
 };
-setInterval(gameLoop, 10);
+gameLoop();
 
 const keyDownHandler = (event) => {
   if (event.keyCode == 39) {

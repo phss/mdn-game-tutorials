@@ -1,6 +1,8 @@
 const canvas = document.getElementById("game-canvas");
 const ctx = canvas.getContext("2d");
 
+var score = 0;
+
 var x = canvas.width / 2;
 var y = canvas.height - 30;
 const ballRadius = 10;
@@ -36,6 +38,12 @@ const clearScreen = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 };
 
+const drawScore = () => {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("Score: " + score, 8, 20);
+};
+
 const drawBall = () => {
   ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI*2);
@@ -69,6 +77,7 @@ const drawBricks = () => {
 
 const draw = () => {
   clearScreen();
+  drawScore();
   drawBall();
   drawPaddle();
   drawBricks();
@@ -113,6 +122,11 @@ const collisionDetection = () => {
       {
         dy = -dy;
         b.status = 0;
+        score++;
+        if (score == brickRowCount * brickColumnCount) {
+          alert("YOU WIN, CONGRATULATIONS!");
+          document.location.reload();
+        };
       }
     }
   }

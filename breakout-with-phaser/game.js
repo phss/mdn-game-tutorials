@@ -3,6 +3,9 @@ var paddle;
 var bricks;
 var scoreText;
 var score = 0;
+var lives = 3;
+var livesText;
+var lifeLostText;
 
 const preload = () => {
   game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -44,8 +47,32 @@ const initBricks = () => {
   }
 };
 
+const ballLeaveScreen = () => {
+  lives--;
+  if (lives) {
+    livesText.setText("Lives: "+lives);
+    lifeLostText.visible = true;
+    ball.reset(game.world.width*0.5, game.world.height-25);
+    paddle.reset(game.world.width*0.5, game.world.height-5);
+    game.input.onDown.addOnce(() => {
+      lifeLostText.visible = false;
+      ball.body.velocity.set(150, -150);
+    }, this);
+  }
+  else {
+    alert("You lost, game over!");
+    location.reload();
+  }
+};
+
 const create = () => {
-  scoreText = game.add.text(5, 5, "Points: 0", { font: "18px Arial", fill: "#0095DD" });
+  const textStyle = { font: "18px Arial", fill: "#0095DD" };
+  scoreText = game.add.text(5, 5, "Points: 0", textStyle);
+  livesText = game.add.text(game.world.width-5, 5, "Lives: " + lives, textStyle);
+  livesText.anchor.set(1, 0);
+  lifeLostText = game.add.text(game.world.width*0.5, game.world.height*0.5, "Life lost, click to continue", textStyle);
+  lifeLostText.anchor.set(0.5);
+  lifeLostText.visible = false;
 
   ball = game.add.sprite(game.world.width*0.5, game.world.height-25, "ball");
   ball.anchor.set(0.5);
@@ -58,10 +85,7 @@ const create = () => {
   ball.body.collideWorldBounds = true;
   ball.body.bounce.set(1);
   ball.checkWorldBounds = true;
-  ball.events.onOutOfBounds.add(() => {
-    alert("Game over!");
-    location.reload();
-  }, this);
+  ball.events.onOutOfBounds.add(ballLeaveScreen, this);
 
   paddle = game.add.sprite(game.world.width*0.5, game.world.height-5, "paddle");
   paddle.anchor.set(0.5,1);

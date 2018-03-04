@@ -3,8 +3,9 @@ const ctx = canvas.getContext("2d");
 
 var x = canvas.width / 2;
 var y = canvas.height - 30;
-const dx = 2;
-const dy = -2;
+const ballRadius = 10;
+var dx = 2;
+var dy = -2;
 
 
 const clearScreen = () => {
@@ -13,7 +14,7 @@ const clearScreen = () => {
 
 const drawBall = () => {
   ctx.beginPath();
-  ctx.arc(x, y, 10, 0, Math.PI*2);
+  ctx.arc(x, y, ballRadius, 0, Math.PI*2);
   ctx.fillStyle = "#0095DD";
   ctx.fill();
   ctx.closePath();
@@ -22,6 +23,13 @@ const drawBall = () => {
 const draw = () => {
   clearScreen();
   drawBall();
+
+  if (x + dx < ballRadius || x + dx > canvas.width - ballRadius) {
+    dx = -dx;
+  }
+  if (y + dy < ballRadius || y + dy > canvas.height - ballRadius) {
+    dy = -dy;
+  }
   x += dx;
   y += dy;
 };

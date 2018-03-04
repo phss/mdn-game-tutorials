@@ -112,8 +112,8 @@ const create = () => {
 
 const ballHitBrick = (ball, brick) => {
   var killTween = game.add.tween(brick.scale);
-  killTween.to({x: 0, y: 0}, 200, Phaser.Easing.Linear.None);
-  killTween.onComplete.addOnce(brick.kill);
+  killTween.to({x: 0, y: 0}, 100, Phaser.Easing.Linear.None);
+  killTween.onComplete.addOnce(() => brick.kill(), this);
   killTween.start();
 
   score += 10;
@@ -131,8 +131,13 @@ const ballHitBrick = (ball, brick) => {
   }
 };
 
+const ballHitPaddle = (ball, paddle) => {
+  ball.animations.play("wobble");
+  ball.body.velocity.x = -5 * (paddle.x - ball.x);
+};
+
 const update = () => {
-  game.physics.arcade.collide(ball, paddle, (ball, paddle) => ball.animations.play("wobble"));
+  game.physics.arcade.collide(ball, paddle, ballHitPaddle);
   game.physics.arcade.collide(ball, bricks, ballHitBrick);
   if (playing) {
     paddle.x = game.input.x || game.world.width*0.5;

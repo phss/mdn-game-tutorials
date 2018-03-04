@@ -77,6 +77,17 @@ const ballHitBrick = (ball, brick) => {
   brick.kill();
   score += 10;
   scoreText.setText("Points: " + score);
+
+  var count_alive = 0;
+  for (var i = 0; i < bricks.children.length; i++) {
+    if (bricks.children[i].alive == true) {
+      count_alive++;
+    }
+  }
+  if (count_alive == 0) {
+    alert("You won the game, congratulations!");
+    location.reload();
+  }
 };
 
 const update = () => {

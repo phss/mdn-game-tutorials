@@ -26,7 +26,8 @@ for (var c = 0; c < brickColumnCount; c++) {
   for(var r = 0; r < brickRowCount; r++) {
     bricks[c][r] = {
       x: (c * (brickWidth + brickPadding)) + brickOffsetLeft,
-      y: (r * (brickHeight + brickPadding)) + brickOffsetTop
+      y: (r * (brickHeight + brickPadding)) + brickOffsetTop,
+      status: 1
     };
   }
 }
@@ -54,11 +55,14 @@ const drawPaddle = () => {
 const drawBricks = () => {
   for (var c = 0; c < brickColumnCount; c++) {
     for(var r = 0; r < brickRowCount; r++) {
-      ctx.beginPath();
-      ctx.rect(bricks[c][r].x, bricks[c][r].y, brickWidth, brickHeight);
-      ctx.fillStyle = "#0095DD";
-      ctx.fill();
-      ctx.closePath();
+      var b = bricks[c][r];
+      if (b.status == 1) {
+        ctx.beginPath();
+        ctx.rect(b.x, b.y, brickWidth, brickHeight);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+      }
     }
   }
 };
@@ -97,9 +101,27 @@ const controlPaddle = () => {
   }
 };
 
+const collisionDetection = () => {
+  for (var c = 0; c < brickColumnCount; c++) {
+    for(var r = 0; r < brickRowCount; r++) {
+      var b = bricks[c][r];
+      if (b.status == 1 &&
+          x > b.x &&
+          x < b.x + brickWidth &&
+          y > b.y &&
+          y < b.y + brickHeight)
+      {
+        dy = -dy;
+        b.status = 0;
+      }
+    }
+  }
+};
+
 const update = () => {
   moveBall();
   controlPaddle();
+  collisionDetection();
 };
 
 const gameLoop = () => {

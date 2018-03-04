@@ -2,6 +2,7 @@ const canvas = document.getElementById("game-canvas");
 const ctx = canvas.getContext("2d");
 
 var score = 0;
+var lives = 3;
 
 var x = canvas.width / 2;
 var y = canvas.height - 30;
@@ -44,6 +45,12 @@ const drawScore = () => {
   ctx.fillText("Score: " + score, 8, 20);
 };
 
+const drawLives = () => {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
+};
+
 const drawBall = () => {
   ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI*2);
@@ -78,6 +85,7 @@ const drawBricks = () => {
 const draw = () => {
   clearScreen();
   drawScore();
+  drawLives();
   drawBall();
   drawPaddle();
   drawBricks();
@@ -93,8 +101,17 @@ const moveBall = () => {
     if (paddleX < x && x < paddleX + paddleWidth) {
       dy = -dy;
     } else {
-      alert("GAME OVER");
-      document.location.reload();
+      lives--;
+      if (lives == 0) {
+        alert("GAME OVER");
+        document.location.reload();
+      } else {
+        x = canvas.width / 2;
+        y = canvas.height - 30;
+        dx = 2;
+        dy = -2;
+        paddleX = (canvas.width - paddleWidth) / 2;
+      }
     }
   }
 

@@ -45,9 +45,17 @@ const moveBall = () => {
   if (x + dx < ballRadius || x + dx > canvas.width - ballRadius) {
     dx = -dx;
   }
-  if (y + dy < ballRadius || y + dy > canvas.height - ballRadius) {
+  if (y + dy < ballRadius) {
     dy = -dy;
+  } else if (y + dy > canvas.height - ballRadius) {
+    if (paddleX < x && x < paddleX + paddleWidth) {
+      dy = -dy;
+    } else {
+      alert("GAME OVER");
+      document.location.reload();
+    }
   }
+
   x += dx;
   y += dy;
 };

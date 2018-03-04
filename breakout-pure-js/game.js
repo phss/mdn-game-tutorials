@@ -7,13 +7,29 @@ const ballRadius = 10;
 var dx = 2;
 var dy = -2;
 
-var paddleHeight = 10;
-var paddleWidth = 75;
+const paddleHeight = 10;
+const paddleWidth = 75;
 var paddleX = (canvas.width - paddleWidth) / 2;
-
 var rightPressed = false;
 var leftPressed = false;
 
+const brickRowCount = 3;
+const brickColumnCount = 5;
+const brickWidth = 75;
+const brickHeight = 20;
+const brickPadding = 10;
+const brickOffsetTop = 30;
+const brickOffsetLeft = 30;
+var bricks = [];
+for (var c = 0; c < brickColumnCount; c++) {
+  bricks[c] = [];
+  for(var r = 0; r < brickRowCount; r++) {
+    bricks[c][r] = {
+      x: (c * (brickWidth + brickPadding)) + brickOffsetLeft,
+      y: (r * (brickHeight + brickPadding)) + brickOffsetTop
+    };
+  }
+}
 
 const clearScreen = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -35,10 +51,23 @@ const drawPaddle = () => {
   ctx.closePath();
 };
 
+const drawBricks = () => {
+  for (var c = 0; c < brickColumnCount; c++) {
+    for(var r = 0; r < brickRowCount; r++) {
+      ctx.beginPath();
+      ctx.rect(bricks[c][r].x, bricks[c][r].y, brickWidth, brickHeight);
+      ctx.fillStyle = "#0095DD";
+      ctx.fill();
+      ctx.closePath();
+    }
+  }
+};
+
 const draw = () => {
   clearScreen();
   drawBall();
   drawPaddle();
+  drawBricks();
 };
 
 const moveBall = () => {

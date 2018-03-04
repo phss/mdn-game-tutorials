@@ -1,6 +1,8 @@
 var ball;
 var paddle;
 var bricks;
+var scoreText;
+var score = 0;
 
 const preload = () => {
   game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -43,6 +45,8 @@ const initBricks = () => {
 };
 
 const create = () => {
+  scoreText = game.add.text(5, 5, "Points: 0", { font: "18px Arial", fill: "#0095DD" });
+
   ball = game.add.sprite(game.world.width*0.5, game.world.height-25, "ball");
   ball.anchor.set(0.5);
 
@@ -69,9 +73,15 @@ const create = () => {
   initBricks();
 };
 
+const ballHitBrick = (ball, brick) => {
+  brick.kill();
+  score += 10;
+  scoreText.setText("Points: " + score);
+};
+
 const update = () => {
   game.physics.arcade.collide(ball, paddle);
-  game.physics.arcade.collide(ball, bricks, (ball, brick) => brick.kill());
+  game.physics.arcade.collide(ball, bricks, ballHitBrick);
   paddle.x = game.input.x || game.world.width*0.5;
 };
 

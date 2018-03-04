@@ -1,8 +1,6 @@
 var ball;
 var paddle;
 var bricks;
-var newBrick;
-var brickInfo;
 
 const preload = () => {
   game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -16,7 +14,7 @@ const preload = () => {
 };
 
 const initBricks = () => {
-  brickInfo = {
+  const brickInfo = {
     width: 50,
     height: 20,
     count: {
@@ -35,7 +33,7 @@ const initBricks = () => {
     for (var r = 0; r < brickInfo.count.row; r++) {
       const brickX = (r*(brickInfo.width+brickInfo.padding))+brickInfo.offset.left;
       const brickY = (c*(brickInfo.height+brickInfo.padding))+brickInfo.offset.top;
-      newBrick = game.add.sprite(brickX, brickY, "brick");
+      const newBrick = game.add.sprite(brickX, brickY, "brick");
       game.physics.enable(newBrick, Phaser.Physics.ARCADE);
       newBrick.body.immovable = true;
       newBrick.anchor.set(0.5);
@@ -73,6 +71,7 @@ const create = () => {
 
 const update = () => {
   game.physics.arcade.collide(ball, paddle);
+  game.physics.arcade.collide(ball, bricks, (ball, brick) => brick.kill());
   paddle.x = game.input.x || game.world.width*0.5;
 };
 

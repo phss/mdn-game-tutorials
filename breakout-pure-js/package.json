@@ -1,0 +1,8 @@
+{
+  "name": "breakout",
+  "main": "index.html",
+  "window": {
+    "width": 480,
+    "height": 320
+  }
+}
